@@ -1,0 +1,19 @@
+**DVFS** stands for **Dynamic Voltage and Frequency Scaling**.
+
+It is a power management technique used in modern computer architectures (like CPUs, GPUs, and smartphones) to conserve energy and reduce heat.
+
+### How It Works
+
+The performance of a processor is tied to its **Clock Frequency** (speed) and its **Operating Voltage**.
+
+* **High Load:** When you are doing something intensive (like gaming or compiling code), the system increases both frequency and voltage to provide maximum performance.
+* **Low Load:** When the system is idle or performing light tasks (like reading a document), DVFS automatically lowers the frequency and voltage.
+
+### Why It Is Used
+
+The power consumption ($P$) of a CMOS chip is roughly proportional to the frequency ($f$) and the square of the voltage ($V$):
+
+
+$$P \propto C \cdot V^2 \cdot f$$
+
+By reducing the voltage even slightly, you get a significant reduction in power consumption and heat generation, which is critical for extending battery life in mobile devices and preventing thermal throttling in high-performance hardware.
