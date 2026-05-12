@@ -24,7 +24,48 @@ Preparing for a Power and Thermal (P&T) role requires a deep understanding of ho
 * **Thermal Throttling Logic:**
 * **IP-specific:** If the GPU thermistor hits a threshold, the SoC reduces the GPU frequency first to preserve the user experience on the CPU.
 * **Cluster-wide:** If the total "skin temperature" (chassis) or the PMIC (Power Management IC) reaches a critical limit, the SoC forces a global throttle across all clusters to prevent hardware damage.
+Thermal throttling is essentially a survival mechanism for your hardware. Think of it as a **staged defense system** designed to keep the device from literally melting or becoming too hot to hold.
 
+Here is a breakdown of the two logic paths you mentioned:
+
+---
+
+### 1. IP-Specific Throttling (The "Surgical" Approach)
+
+This logic targets a specific block (Intellectual Property/IP) of the chip—in this case, the **GPU**.
+
+* **Trigger:** A dedicated thermistor (temperature sensor) physically located inside or right next to the GPU core hits a pre-defined limit.
+* **Action:** The SoC controller lowers the **GPU frequency** (e.g., dropping it from 900MHz to 400MHz).
+* **The Goal:** To prioritize the **CPU**. In many mobile and embedded scenarios, a stuttering UI or a slow system response (CPU-bound) is more frustrating to a user than a drop in frame rate in a game (GPU-bound). By cooling down the GPU first, the system tries to keep the CPU running at full speed for as long as possible.
+
+### 2. Cluster-Wide / System Throttling (The "Emergency" Approach)
+
+This is a global override that happens when local measures (like GPU-only throttling) aren't enough to cool the entire device.
+
+* **Trigger:**
+* **Skin Temperature:** Sensors on the device chassis (the "skin") detect it’s getting too hot for a human to touch comfortably.
+* **PMIC:** The Power Management IC itself is overheating because it’s converting too much energy for the battery or the components.
+
+
+* **Action:** The SoC forces a **Global Throttle**. It ignores individual component needs and slashes the voltage and frequency (DVFS) across all CPU cores, GPUs, and even Neural Processing Units (NPUs).
+* **The Goal:** Hardware safety and user comfort. This is the "last stand" to prevent permanent damage to the silicon or the battery.
+
+---
+
+### Key Comparison
+
+| Feature | IP-Specific (GPU) | Cluster-Wide (Global) |
+| --- | --- | --- |
+| **Precision** | High (Targeted) | Low (Broad) |
+| **Priority** | Balance (Save CPU performance) | Safety (Prevent hardware failure) |
+| **Impact** | Lower FPS in graphics tasks | General system lag and slow-down |
+| **Sensors used** | Internal GPU Thermistors | Chassis sensors / PMIC sensors |
+
+### Summary of the Logic Flow
+
+1. **Stage 1:** GPU gets hot $\rightarrow$ Only the GPU slows down.
+2. **Stage 2:** GPU is still hot, and now the CPU is also heating up $\rightarrow$ Total heat saturates the chassis.
+3. **Stage 3:** Skin/PMIC limit reached $\rightarrow$ The entire chip is "choked" to drop the temperature immediately.
 
 
 ---
