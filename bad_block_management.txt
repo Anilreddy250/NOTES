@@ -1,0 +1,38 @@
+In the context of NVMe SSDs, **Grown Bad Blocks (GBB)**—often referred to as **Reallocated Sectors**—are NAND flash memory cells that were functional when the drive left the factory but became unreliable or unusable during the drive's operation.
+
+Unlike "Factory Bad Blocks" (which are identified and mapped out during the manufacturing process), Grown Bad Blocks "grow" over time due to the natural wear and tear of flash memory.
+
+### How Grown Bad Blocks Occur
+
+NAND flash memory has a limited lifespan measured in **Program/Erase (P/E) cycles**. Each time data is written or erased, the insulating oxide layer of the cell degrades slightly. Eventually:
+
+1. **Wear-out:** The cell can no longer hold a charge reliably.
+2. **Bit Errors:** The drive detects an uncorrectable number of bit errors (ECC failure) when trying to read that specific block.
+3. **Write/Erase Failure:** The NVMe controller attempts to write data or clear a block, and the operation fails.
+
+### How the NVMe Controller Handles GBB
+
+The NVMe controller is designed to handle these failures silently through a process called **Bad Block Management**:
+
+* **Retirement:** Once a block is flagged as "bad," the controller marks it as unusable to prevent any future data from being stored there.
+* **Reallocation:** The controller takes data that was supposed to go to the bad block and moves it to a "Spare Area"—a hidden reserve of healthy NAND blocks set aside specifically for this purpose.
+* **Mapping:** The drive updates its internal logical-to-physical mapping table so the Operating System never knows a physical shift occurred.
+
+### Why It Matters
+
+* **Drive Health (SMART):** You can monitor the "growth" of these blocks using **SMART** (Self-Monitoring, Analysis, and Reporting Technology) attributes. In NVMe, look for the **Percentage Used** and **Available Spare** attributes.
+* **Performance:** If a drive starts generating GBBs rapidly, it may indicate a failing NAND chip. While the drive can handle a few, a sudden spike usually suggests the drive is approaching its **End of Life (EOL)**.
+* **Data Integrity:** Modern controllers use strong **ECC (Error Correction Code)** to recover data from a block just before it goes "bad," ensuring you don't lose files during the transition to a spare block.
+
+---
+
+### Summary Table
+
+| Feature | Factory Bad Blocks | Grown Bad Blocks (GBB) |
+| --- | --- | --- |
+| **Origin** | Manufacturing defects | Physical wear / P/E cycles |
+| **Detection** | During factory testing | During active use (Read/Write) |
+| **Solution** | Mapped out before shipping | Reallocated to "Spare Area" |
+| **User Impact** | None | Visible in SMART health reports |
+
+If you notice the "Available Spare" percentage dropping significantly in your NVMe utility, it is a sign that the GBB count is rising and it is time to back up your data.
