@@ -1,0 +1,41 @@
+**Wear leveling** is a fundamental management technique used by the NVMe controller to ensure that all NAND flash memory cells are used evenly.
+
+Because NAND cells have a limited number of **Program/Erase (P/E) cycles**, writing to the same physical location repeatedly would cause those specific cells to wear out prematurely, leading to Grown Bad Blocks (GBB) and eventual drive failure while the rest of the drive remains "fresh."
+
+### How Wear Leveling Works
+
+The NVMe controller uses an internal **Flash Translation Layer (FTL)**. When the operating system wants to write data to a specific "Logical Block Address" (LBA), the FTL maps that logical address to a different *physical* location on the NAND chips each time. This ensures that no single physical block is "hammered" with constant writes.
+
+---
+
+### The Three Main Types of Wear Leveling
+
+#### 1. Dynamic Wear Leveling
+
+This is the simplest form. The controller only focuses on **newly arriving data**.
+
+* When you save a file, the controller looks for the physical blocks with the lowest "erase count" among the currently free blocks.
+* **The Limitation:** It doesn't touch "cold data" (files that stay on the drive for years without being moved). Those cold blocks sit idle while the "hot" (frequently changed) areas wear out.
+
+#### 2. Static Wear Leveling
+
+This is more advanced and efficient for drive longevity. The controller tracks the erase counts of **every** block on the drive, including those containing saved data.
+
+* If a certain block has a very low erase count because it contains "static" data (like an OS file), the controller will proactively move that static data to a more "worn" block.
+* This frees up the "fresh" block to handle high-frequency writes.
+
+#### 3. Global Wear Leveling
+
+In high-end NVMe drives with multiple NAND packages, global wear leveling ensures that wear is balanced not just within a single chip, but across **all chips** on the entire SSD. This prevents one flash package from dying while others are at 90% health.
+
+---
+
+### Why Wear Leveling is Critical for NVMe
+
+* **Maximizes TBW (Total Bytes Written):** It ensures the drive reaches its maximum rated lifespan by using every bit of available NAND.
+* **Prevents "Hot Spots":** Without it, a database or a log file that updates every second could kill a specific part of your SSD in weeks.
+* **Works with Garbage Collection:** Wear leveling and Garbage Collection work together. While Garbage Collection cleans up "stale" data, Wear Leveling decides which empty physical block should be used next to keep the wear uniform.
+
+### Monitoring Wear Leveling
+
+In an NVMe environment, you can check how effective the wear leveling has been by looking at the **Percentage Used** attribute in the SMART logs. A drive with good wear leveling will show a steady, slow increase in this percentage across its entire capacity rather than sudden failures in specific sectors.
