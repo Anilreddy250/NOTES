@@ -1,0 +1,93 @@
+These terms form the bedrock of software testing and development. If you are preparing for an interview or looking to sharpen your process knowledge, understanding how these frameworks interconnect is crucial.
+
+Let's break them down clearly, moving from the macro-level development process down to how a single bug is tracked.
+
+---
+
+## 1. SDLC (Software Development Life Cycle)
+
+SDLC is the overarching framework that defines the steps taken to build a software product from scratch to delivery and maintenance. Think of it as the entire construction project.
+
+### Waterfall vs. Agile
+
+These are the two primary methodologies used to execute the SDLC.
+
+* **Waterfall Model:** A linear, sequential approach. You finish one phase completely before moving to the next.
+* *Pros & Cons:* It is highly structured and easy to manage, but incredibly rigid. If requirements change halfway through, going backward is costly and difficult. Testing happens only at the very end.
+
+
+* **Agile Model:** An iterative and incremental approach. The project is broken down into small, manageable cycles called **Sprints** (usually 1–4 weeks long).
+* *Pros & Cons:* It embraces change. Continuous feedback from stakeholders ensures the product evolves correctly. Testing is integrated continuously throughout every sprint, rather than saved for the end.
+
+
+
+---
+
+## 2. STLC (Software Testing Life Cycle)
+
+While the SDLC covers the entire development journey, the **STLC** is a specific subset focused purely on testing. It ensures that quality control is systematic and measurable.
+
+The STLC runs in parallel with the SDLC and consists of six distinct phases:
+
+* **Requirement Analysis:** The QA team studies the project requirements to understand what needs to be tested and identifies testable vs. non-testable features.
+* **Test Planning:** A Senior QA or Test Lead defines the strategy, scope, timeline, tool selection, and resource allocation. The output here is the **Test Plan** document.
+* **Test Case Development:** Testers write detailed, step-by-step test cases, create test data, and map them back to requirements using a **Requirement Traceability Matrix (RTM)** to ensure 100% coverage.
+* **Test Environment Setup:** Setting up the hardware and software conditions (servers, databases, network configurations) where the test cases will execute.
+* **Test Execution:** Testers run the test cases against the built software. If a test passes, great. If it fails, a bug is logged.
+* **Test Cycle Closure:** The team analyzes test results to ensure exit criteria are met, discusses what went well or poorly, and prepares final test summary reports.
+
+---
+
+## 3. Test Methodologies
+
+Test methodologies define the *way* we approach evaluating the software. They dictate who tests it, how much of the internal mechanics we see, and what characteristics we are measuring.
+
+### The Visibility Perspective
+
+* **White Box Testing:** The tester has full access to the source code, internal structures, and design. Focuses on verifying loops, statements, paths, and code branches (mostly done by developers via Unit Testing).
+* **Black Box Testing:** The tester treats the software as a "black box" — they have no knowledge of the internal code. Testing is based entirely on inputs, outputs, and specified requirements (mostly done by QA teams via functional testing).
+* **Grey Box Testing:** A hybrid approach. The tester has partial knowledge of the internal structures (like database schemas or system architecture) but tests the application through the user interface or APIs.
+
+### The Objective Perspective
+
+* **Functional Testing:** Verifying *what* the system does (e.g., Can a user log in? Does the checkout button work?). Examples include Unit, Integration, System, and Sanity testing.
+* **Non-Functional Testing:** Verifying *how well* the system performs under constraints (e.g., How fast does the page load? Can it handle 10,000 concurrent users? Is it secure?). Examples include Performance, Load, Stress, and Security testing.
+
+---
+
+## 4. Bug Life Cycle (Defect Life Cycle)
+
+The Bug Life Cycle refers to the specific, sequential states a defect or bug goes through from the moment a tester discovers it until it is permanently closed and resolved.
+
+1. **New:** Bug Logged.
+A tester finds a defect, documents the steps to reproduce it, attaches logs/screenshots, and posts it to a tracking tool (like Jira).
+
+
+2. **Assigned:** Triaged to Developer.
+A Lead or Product Manager reviews the bug and assigns it to a specific developer or development team to be addressed.
+
+
+3. **Open:** Under Investigation.
+The developer begins analyzing the bug. At this stage, they may reject it (not a bug), mark it as a duplicate, or defer it to a later release. If valid, they start working on a fix.
+
+
+4. **Fixed:** Code Modified.
+The developer makes the necessary code changes to resolve the defect and checks the code back into the main repository build.
+
+
+5. **Pending Retest:** Build Released.
+The fixed code is deployed into the test environment, signaling to the QA team that it is ready to be validated.
+
+
+6. **Retesting & Verified:** QA Verification.
+The tester executes the exact same steps to see if the bug is gone. If the bug is still present, they **Reopen** it (sending it back to the 'Open' state). If it works perfectly, they mark it as **Verified**.
+
+
+7. **Closed:** Final State.
+Once verified, the bug is officially closed and considered resolved for that software release cycle.
+
+
+---
+
+> **Summary Analogy:**
+> If **SDLC** is the roadmap for building a car, **Agile/Waterfall** is the driving style. **STLC** is the dedicated quality check protocol run by inspectors at different checkpoints along the assembly line. **Test Methodologies** are the tools (like crash tests vs. engine diagnostics) used during inspection, and the **Bug Life Cycle** is the paperwork tracking a faulty part from the moment it fails inspection until it is replaced and approved.
