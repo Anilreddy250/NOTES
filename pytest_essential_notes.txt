@@ -1,0 +1,133 @@
+If you want to master `pytest` beyond writing basic tests, there are **three fundamental concepts** you absolutely must know. These concepts elevate your testing from basic scripts to professional, maintainable, and clean test suites.
+
+---
+
+## 1. Parametrization (`@pytest.mark.parametrize`)
+
+### Definition
+
+Parametrization allows you to run the exact same test function multiple times with different sets of inputs and expected outputs. Instead of writing five separate functions for five different test scenarios, you write one test and pass data into it.
+
+### Real-Time Example: E-Commerce Shopping Cart Discount
+
+Imagine you are testing a shopping cart's discount logic. You want to make sure different coupon codes apply the correct percentage reduction.
+
+```python
+import pytest
+
+# The function we want to test
+def calculate_discount(price: float, coupon: str) -> float:
+    if coupon == "WELCOME10":
+        return price * 0.90
+    elif coupon == "SUMMER20":
+        return price * 0.80
+    elif coupon == "FREEPASS":
+        return 0.0
+    return price
+
+# The Must-Know Pytest Concept
+@pytest.mark.parametrize(
+    "original_price, coupon_code, expected_price",
+    [
+        (100.0, "WELCOME10", 90.0),   # Case 1: 10% off
+        (100.0, "SUMMER20", 80.0),    # Case 2: 20% off
+        (50.0, "FREEPASS", 0.0),      # Case 3: 100% off
+        (100.0, "INVALID", 100.0),    # Case 4: No discount for bad coupon
+    ]
+)
+def test_calculate_discount(original_price, coupon_code, expected_price):
+    assert calculate_discount(original_price, coupon_code) == expected_price
+
+```
+
+> **Why it's essential:** If one case fails (e.g., `SUMMER20` calculates wrong), `pytest` will report exactly which row failed while still running all the other scenarios.
+
+---
+
+## 2. Fixtures (`@pytest.fixture`)
+
+### Definition
+
+Fixtures are setup functions that run **before** your tests to prepare the environment, create dummy data, or initialize resources. They help you avoid repeating setup code across multiple test functions.
+
+### Real-Time Example: Database Connection or API Client
+
+Imagine you have a `DatabaseConnection` class. You don't want to write code to connect and disconnect inside every single test function.
+
+```python
+import pytest
+
+class DatabaseConnection:
+    def __init__(self):
+        self.connected = True
+    def fetch_user_role(self, user_id):
+        return "admin" if user_id == 1 else "guest"
+    def close(self):
+        self.connected = False
+
+# The Must-Know Pytest Concept
+@pytest.fixture
+def db_conn():
+    """Sets up a database connection before the test, and closes it after."""
+    conn = DatabaseConnection()
+    yield conn  # This is where the test happens!
+    conn.close() # Clean up code runs after the test completes
+
+# Using the fixture by passing its name as an argument
+def test_admin_user_role(db_conn):
+    assert db_conn.fetch_user_role(1) == "admin"
+
+def test_guest_user_role(db_conn):
+    assert db_conn.fetch_user_role(42) == "guest"
+
+```
+
+> **Why it's essential:** The `yield` keyword allows you to safely "tear down" or clean up resources (like closing files or database connections) so your tests don't leave a mess behind.
+
+---
+
+## 3. Mocking (`monkeypatch` / `unittest.mock`)
+
+### Definition
+
+Mocking is the act of replacing a real piece of your application (like an external API call, a hardware component, or a system clock) with a fake "mock" object that mimics its behavior. This ensures your tests don't rely on external factors.
+
+### Real-Time Example: Fetching Weather Data from an External API
+
+If you are testing a function that fetches weather data from a third-party website, you don't want your tests to fail just because the weather website is down or because you don't have internet access.
+
+```python
+import pytest
+import requests
+
+# The function we want to test
+def get_temperature_alert(city: str) -> str:
+    # This makes a real network request over the internet
+    response = requests.get(f"https://api.weather.com/v1/{city}")
+    data = response.json()
+    
+    if data["temp"] > 40:
+        return "Extreme Heat Warning!"
+    return "Weather is normal."
+
+# The Must-Know Pytest Concept
+def test_get_temperature_alert_heatwave(monkeypatch):
+    # 1. Define a fake response object
+    class FakeResponse:
+        def json(self):
+            return {"temp": 45} # Simulate a dangerous 45°C day
+            
+    # 2. Use monkeypatch to intercept requests.get and return our fake response
+    monkeypatch.setattr(requests, "get", lambda url: FakeResponse())
+
+    # 3. Run the test. It won't actually touch the internet!
+    result = get_temperature_alert("Sahara")
+    assert result == "Extreme Heat Warning!"
+
+```
+
+> **Why it's essential:** It isolates your code. Your test now specifically evaluates *how your function handles data*, without depending on a live server or an active internet connection.
+
+---
+
+Which of these three concepts would you like to practice implementing first?
