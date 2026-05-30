@@ -1,0 +1,80 @@
+Here is a corrected, professionally polished, and well-structured version of your work experience and project details. The technical terminology has been refined (e.g., *form factors*, *DUTs*, *baud rate*, *LeCroy/Viavi analyzers*), grammatical errors have been fixed, and the workflow has been organized into a logical engineering process.
+
+---
+
+## Professional Overview: SSD Test Engineering Workflow
+
+### Step 1: System Setup and Configuration
+
+* **Infrastructure Provisioning:** Initiate infrastructure setup via **GEL tickets**, collaborating with dedicated infrastructure teams to provision test systems.
+* **OS & Driver Deployment:** Install Linux operating systems, configure required kernel drivers, and deploy essential system packages necessary for test execution.
+* **Network & Environment Configuration:** Configure SSH connections, map network paths, and establish mount points to securely connect test nodes to central servers.
+* **Service Automation:** Initialize and manage system execution environments using dedicated Linux background services.
+
+### Step 2: Test Planning and Execution Methods
+
+Test execution is tailored to OEM requirements within a **14-day sprint cycle**, across various SSD form factors (e.g., 2230, 2242, 2280) and capacities (ranging from 256GB to 4TB). Testing is executed using two distinct methodologies:
+
+* **Method A (Orchestrated Automation):** Map test plans to specific nodes and dispatch execution to Device Under Test (**DUT**) clusters utilizing orchestration tools such as **Jenkins**, **Rundeck**, and Micron’s internal **MTAP** platform.
+* **Method B (Stress & Endurance Testing):** Utilize the **Robot Framework** to run high-loop I/O stress tests (up to 10k loops) aimed at finding "until-failure" limits.
+* This setup requires managing the custom Linux service `lrio` using `systemctl` commands (`enable`, `start`, `status`).
+* Test telemetry, including execution duration, status, and drive health metrics, is automatically dumped to a centralized network location.
+
+
+
+### Step 3: Failure Analysis, Debugging, and Defect Triage
+
+* **Triage Pipeline:** Continuously monitor execution reports to isolate failing systems. Debugging begins from the exact timestamp of the failure.
+* **Infrastructure vs. HW/FW Isolation:**
+* *Infrastructure Issues:* If a failure is rooted in system configuration or network connectivity, resolve the environment glitch and trigger a rerun.
+* *Firmware/Hardware Bugs:* If a defect is identified within the firmware, controller, or NAND flash, preserve the exact failure state of the system to prevent data loss.
+
+
+* **Defect Lifecycle Management:** Document the issue in **Jira** with attached logs and collaborate directly with the development team. Upon receiving a patch, execute regression testing cycles to validate the fix before closing the Jira ticket.
+
+### Step 4: Log Collection, Telemetry, and Protocol Analysis
+
+* **Firmware Deployment:** Flash firmware builds using project-specific hardware tooling and manual or automated utility scripts.
+* **Advanced Hardware Diagnostics:** * Capture low-level, pre-boot, or crash-state data via physical **UART boards** using terminal emulators like Tera Term configured at a **115200 baud rate**.
+* Capture high-speed PCIe/NVMe protocol traces using industry-standard hardware trace analyzers, including **Teledyne LeCroy** and **Viavi**.
+
+
+
+### Step 5: Environmental and Thermal Testing
+
+* **Thermal Cycling:** Subject SSDs to extreme environmental conditions inside physical thermal chambers, validating drive stability under temperatures ranging from **-15°C to 120°C**.
+* **Behavioral Monitoring:** Monitor drive behavior, thermal throttling mechanisms, and data integrity externally while the drive functions under extreme thermal stress.
+
+### Step 6: Stakeholder Reporting
+
+* **Telemetry Audits:** Generate and submit comprehensive weekly health and status reports to the **MAG team**.
+* **Anomalous Behavior Tracking:** Collaborate with the team to parse drive logs aggregated across all active runs to spot unexpected drive behaviors or edge-case performance degradation.
+
+---
+
+## Infrastructure Optimization & Scripts Development
+
+### Python Automation & Log Scraping
+
+To bridge data gaps not covered by standard framework reports, I design and maintain standalone **Python automation scripts**. These scripts programmatically parse raw tool-based outputs and harvest ad-hoc diagnostic logs required by developers for deep-dive analysis, drastically reducing manual CLI efforts.
+
+### Repository Management & CI/CD Integration
+
+At the onset of new project phases, I update configuration repositories to align with changing drive parameters and utility requirements. I manage code versioning using **Git** across **GitHub** and **Bitbucket**, pushing verified updates to network paths where they are automatically fetched by the automated test frameworks.
+
+---
+
+## Academic Innovation (BITS Pilani M.Tech Dissertation Project)
+
+* **Project Title:** Web-Based UI Framework for Automated Test Analytics
+* **Problem Statement:** Analyzing vast volumes of raw test logs across multiple test beds was consuming 3 to 5 hours of manual effort daily.
+* **Solution:** Developed a full-stack web-based GUI dashboard that automatically ingests and processes raw logs collected from distributed test systems.
+* **Impact:** Features an intuitive interface populated with custom widgets, failure-filtering mechanisms, and data visualization graphs. **This framework completely optimized the failure monitoring workflow, saving 3 to 5 hours of manual effort per shift.**
+
+---
+
+### Key Improvements Made in this Version:
+
+1. **Fixed Typographical Errors:** Corrected *farmfactors* $\rightarrow$ *form factors*, *jenkines* $\rightarrow$ *Jenkins*, *duts* $\rightarrow$ *DUTs (Devices Under Test)*, *chramber* $\rightarrow$ *chamber*, *devolper* $\rightarrow$ *developer*, *dessertaion* $\rightarrow$ *dissertation*, *bourd rate* $\rightarrow$ *baud rate*, *vivavy* $\rightarrow$ *Viavi*.
+2. **Structural Flow:** Reordered the steps so that system setup, test execution, and debugging flow naturally before reporting and specialized testing (like thermal testing).
+3. **Tone & Impact:** Elevated the vocabulary to fit a Senior Software/QA Engineer profile, emphasizing automation, troubleshooting depth, and time-saving metrics.
