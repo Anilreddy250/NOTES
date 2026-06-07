@@ -1,0 +1,166 @@
+Here is a compilation of foundational Python interview questions and answers, focusing entirely on definitions, concepts, and architectural design rather than raw coding.
+
+---
+
+## Core Concepts & Data Types
+
+### 1. What is Python and what are its key features?
+
+Python is a high-level, **interpreted**, object-oriented, and dynamically typed programming language.
+
+* **Interpreted:** Code is executed line-by-line by the Python Interpreter, meaning it does not need to be compiled into machine code before running.
+* **Dynamically Typed:** You don’t need to explicitly declare variable types (like `int` or `string`). The interpreter decides the type at runtime.
+* **Extensive Libraries:** It features a massive standard library for everything from data science to web development.
+
+### 2. What is the difference between List and Tuple?
+
+This is one of the most common Python interview questions. The differences come down to mutability and performance:
+
+| Feature | List | Tuple |
+| --- | --- | --- |
+| **Mutability** | **Mutable** (Can be modified, added to, or changed after creation). | **Immutable** (Cannot be modified once created). |
+| **Syntax** | Enclosed in square brackets `[1, 2, 3]`. | Enclosed in parentheses `(1, 2, 3)`. |
+| **Memory** | Consumes more memory. | More memory-efficient. |
+| **Speed** | Slower execution/iteration. | Faster execution/iteration. |
+
+### 3. What is the difference between Mutability and Immutability?
+
+* **Mutable objects** can change their state or contents after they are created (e.g., `list`, `dict`, `set`).
+* **Immutable objects** cannot be altered after they are created. If you try to modify them, Python creates a completely new object in memory instead (e.g., `int`, `float`, `string`, `tuple`).
+
+### 4. What is the difference between a Set and a Dictionary?
+
+* **Set:** An unordered collection of **unique** elements. It does not allow duplicate values and is not stored in key-value pairs.
+* **Dictionary (`dict`):** An unordered (ordered by insertion since Python 3.7) collection of **key-value pairs**. Keys must be unique and immutable, but values can be anything and can repeat.
+
+---
+
+## Memory Management & Architecture
+
+### 5. What is PEP 8?
+
+**PEP 8** stands for *Python Enhancement Proposal 8*. It is the official style guide for writing Python code. It outlines best practices for formatting code to maximize readability (e.g., using 4 spaces per indentation level, limiting lines to 79 characters, and using `snake_case` for variable names).
+
+### 6. How is memory managed in Python?
+
+Python manages memory automatically via a **Private Heap Space**.
+
+* All Python objects and data structures live in this private heap. The programmer does not have direct access to it.
+* Python utilizes an internal **Garbage Collector** that recycles unused memory.
+* It primarily uses **Reference Counting**—tracking how many pointers reference an object. When an object's reference count drops to zero, the memory is cleared.
+
+### 7. What is the GIL (Global Interpreter Lock)?
+
+The **GIL** is a mutex (or a lock) used by the standard Python interpreter (CPython) to ensure that **only one thread executes Python bytecode at a time**.
+
+* Even on a multi-core processor, the GIL prevents CPU-bound Python programs from running on multiple threads simultaneously.
+* *Note:* To bypass the GIL for heavy computing, developers use **multiprocessing** instead of multithreading.
+
+---
+
+## Scope & Advanced Definitions
+
+### 8. What is the difference between local, global, and non-local variables?
+
+* **Local Variables:** Variables declared inside a function. They can only be accessed within that specific function.
+* **Global Variables:** Variables declared outside of any function (at the script's root level). They are accessible by any function throughout the file.
+* **Non-local Variables:** Used in nested functions. They reference a variable in the outer (enclosing) function, initialized using the `nonlocal` keyword.
+
+### 9. What are Decorators in Python?
+
+A **Decorator** is a design pattern that allows you to modify or extend the behavior of a function or class without permanently changing its source code. They wrap another function to extend its behavior and are dynamically applied using the `@decorator_name` syntax.
+
+### 10. What is the difference between `__new__` and `__init__`?
+
+* **`__new__`** is the actual **creator** method. It is called to instantiate the object and returns a new instance of the class.
+* **`__init__`** is the **initializer** method. It takes the instance created by `__new__` and sets up its initial attributes/states.
+
+### 11. What is a Generator, and how does it differ from a normal function?
+
+* A **Normal Function** computes a set of values and returns them all at once using the `return` keyword, which terminates the function execution.
+* A **Generator** returns an iterator object that produces a sequence of values lazily—one at a time, on-demand—using the `yield` keyword. It pauses execution after yielding a value and resumes where it left off when asked for the next item, saving massive amounts of memory.
+
+---
+
+## Built-in Utilities
+
+### 12. What is the difference between `range()` and `xrange()`?
+
+* **In Python 2:** `range()` generated a static list of numbers in memory all at once. `xrange()` generated an iterator object that computed numbers on the fly (saving memory).
+* **In Python 3:** `xrange()` was deleted entirely. The standard `range()` function was rewritten to behave exactly like Python 2's `xrange()`.
+
+### 13. What is the difference between `is` and `==`?
+
+* **`==` (Equality Operator):** Checks if the **values** of two variables are equal.
+* **`is` (Identity Operator):** Checks if two variables point to the **exact same object in memory** (i.e., they share the same memory location/ID).
+
+---
+
+Would you like to explore definitions regarding Object-Oriented Programming (OOP) in Python, or perhaps look into how Python handles exception hierarchies?
+
+Excellent! Let's dive straight into Object-Oriented Programming (OOP) concepts and Exception Handling definitions in Python.
+
+---
+
+## Object-Oriented Programming (OOP) in Python
+
+### 1. What are the four pillars of OOPs in Python?
+
+Python is fully object-oriented, structured around four foundational concepts:
+
+* **Inheritance:** Allows a new class (Child) to adopt attributes and methods from an existing class (Parent), promoting code reusability.
+* **Polymorphism:** The ability of different classes to be treated as instances of the same parent class through a common interface. In simple terms, it means "one interface, multiple forms" (e.g., a method named `calculate_area()` behaving differently in a `Circle` class vs. a `Square` class).
+* **Encapsulation:** The practice of hiding an object’s internal state and requiring all interaction to occur through public methods. In Python, this is weakly enforced using a single underscore `_` (protected) or strongly enforced using a double underscore `__` (private variable name mangling).
+* **Abstraction:** Hiding complex implementation details and showing only the essential features to the user. Python achieves this using the `abc` (Abstract Base Classes) module.
+
+### 2. What is the difference between Class Methods and Static Methods?
+
+Both are bound to a class rather than an object instance, but they serve different purposes:
+
+* **Class Method (`@classmethod`):** Takes `cls` as its first implicit argument. It can access and modify class-level state that applies across all instances of that class.
+* **Static Method (`@staticmethod`):** Does not take an implicit first argument (`self` or `cls`). It behaves exactly like a plain, isolated utility function that happens to live inside the class's namespace.
+
+### 3. What is Multiple Inheritance, and what is MRO?
+
+* **Multiple Inheritance:** A situation where a single child class inherits directly from more than one parent class.
+* **MRO (Method Resolution Order):** The strict order or path Python follows to search for a method or attribute in a class hierarchy. Python uses the **C3 Linearization algorithm** to determine this order, which you can inspect on any class by calling `ClassName.__mro__`.
+
+---
+
+## Exception Handling Concepts
+
+### 4. How does Exception Handling work conceptually in Python?
+
+Exception handling manages runtime errors so the program doesn't crash abruptly. It relies on four blocks:
+
+* **`try`:** Encloses the volatile code that might throw an error.
+* **`except`:** Catches and handles specific exceptions raised in the `try` block.
+* **`else`:** Executes code *only if* the `try` block ran successfully without any exceptions.
+* **`finally`:** Executes clean-up code (like closing databases or files) **no matter what**, regardless of whether an error occurred or was handled.
+
+### 5. What is the difference between Syntax Errors and Exceptions?
+
+* **Syntax Errors:** Occur when the interpreter parses the code and finds that it violates Python's structural rules (e.g., forgetting a colon `:` or a closing parenthesis). The program will refuse to run at all.
+* **Exceptions:** Occur during **runtime** execution. The syntax is completely legal, but an unexpected event halts the program (e.g., trying to divide a number by zero (`ZeroDivisionError`) or trying to open a file that does not exist (`FileNotFoundError`)).
+
+---
+
+## Miscellaneous Key Terms
+
+### 6. What are Namespace and Scope in Python?
+
+* **Namespace:** A mapping system (like a dictionary) that ensures all variable and function names are unique and can be looked up without conflict.
+* **Scope:** The structural region of a program where a specific namespace is directly accessible. Python resolves names using the **LEGB rule** (Local, Enclosing, Global, Built-in).
+
+### 7. What is the difference between Deep Copy and Shallow Copy?
+
+* **Shallow Copy:** Creates a new collection object, but populates it with *references* to the child objects found in the original. If you modify a nested object in the copy, it changes in the original too.
+* **Deep Copy:** Creates a new collection object and recursively copies *everything*, including all nested child objects. The copy and the original share absolutely nothing in memory.
+
+### 8. What is a Lambda function?
+
+A **Lambda function** is a small, anonymous (unnamed) function defined using the `lambda` keyword. It can take any number of arguments but can only consist of a single, self-contained expression that implicitly returns a value.
+
+---
+
+Would you like to review how Python's built-in memory collection works under the hood (like Garbage Collection), or shift focus to another area?
