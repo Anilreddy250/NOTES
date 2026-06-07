@@ -164,3 +164,61 @@ A **Lambda function** is a small, anonymous (unnamed) function defined using the
 ---
 
 Would you like to review how Python's built-in memory collection works under the hood (like Garbage Collection), or shift focus to another area?
+
+Let's look into how Python handles its memory lifecycle behind the scenes, alongside a few advanced memory concepts often brought up in senior or technical interviews.
+
+---
+
+## Memory Management & Garbage Collection
+
+### 1. How does Python's Garbage Collector (GC) work under the hood?
+
+Python uses two primary mechanisms to automatically clean up memory: **Reference Counting** and **Generational Garbage Collection**.
+
+* **Reference Counting (Primary):** Every object in Python maintains a counter tracking how many references point to it. When you assign an object to a new variable, the count goes up. When a variable goes out of scope or is deleted, the count goes down. As soon as a reference count hits zero, Python instantly deallocates the object's memory.
+* **Generational Garbage Collection (Secondary):** Reference counting alone cannot detect **cyclic references** (where Object A points to Object B, and Object B points to Object A, but nothing else in the program can access them). To solve this, Python’s GC runs periodically in the background, grouping objects into three generations (Generation 0, 1, and 2) based on how long they have survived. New objects start in Gen 0. If they survive a collection cycle, they move up. Older generations are scanned less frequently, optimizing performance.
+
+### 2. What are Cyclic References, and why are they a problem?
+
+A cyclic reference occurs when two or more objects refer to each other in a closed loop. Because they reference each other, their individual reference counts can never drop to zero naturally—even if your main program loses access to all of them.
+
+Without Python's backup Generational Garbage Collector to actively search for and break these isolated loops, these dead objects would stay trapped in memory forever, causing a **memory leak**.
+
+---
+
+## Optimization Tech: Interning & Management
+
+### 3. What is String Interning and Integer Interning in Python?
+
+To optimize performance and save space, Python reuses certain small, immutable objects instead of creating new ones over and over:
+
+* **Integer Interning:** When Python starts up, it automatically pre-allocates and caches an array of integer objects for numbers ranging from **$-5$ to $256$**. Any time you use a number in this range, Python points your variable to that pre-existing memory address.
+* **String Interning:** Python caches certain strings (typically short, compile-time constants or strings that look like valid identifiers) so they share the same memory location. This allows Python to compare strings instantly using their memory address (`is` operator) rather than checking them character-by-character (`==` operator).
+
+### 4. What is the difference between the `sys.getsizeof()` function and Object Overhead?
+
+* **`sys.getsizeof()`:** A built-in Python function that returns the actual size of an object in bytes, including the structural overhead imposed by the Python interpreter.
+* **Object Overhead:** Because Python objects are dynamically typed, they carry extra weight. A raw integer in C might only take up 4 bytes, but a standard integer object in Python takes up significantly more memory (typically 28 bytes) because it must store its reference count, its object type pointer, and its actual value.
+
+---
+
+## Code Compilation & Context Control
+
+### 5. What are `.pyc` files, and why does Python create them?
+
+When you run a Python script, the interpreter first compiles your high-level code into a low-level format called **bytecode**.
+
+Python stores this compiled bytecode inside a directory named `__pycache__` using `.pyc` extensions. The next time you execute the script, Python checks if the source file has changed. If it hasn't, it skips the slow parsing/compilation phase and loads the `.pyc` file directly, speeding up the program's startup time.
+
+### 6. What is a Context Manager, and what protocol does it follow?
+
+A Context Manager is an architectural pattern used to safely allocate and release resources exactly when needed (e.g., opening a file, locking a thread, or connecting to a database). It is implemented using the `with` statement.
+
+Conceptually, a context manager guarantees that cleanup code is executed even if the code inside the block throws an unhandled exception. To act as a context manager, a Python class must implement the **Context Management Protocol** using two special dunder methods:
+
+* `__enter__()`: Sets up the resource and optionally returns an object.
+* `__exit__()`: Handles cleaning up the resource, closing files, or suppressing exceptions when the block finishes.
+
+---
+
+Would you like to switch gears to look at some core data structure algorithms, or look into the architectural differences between Python's multithreading and multiprocessing modules?
